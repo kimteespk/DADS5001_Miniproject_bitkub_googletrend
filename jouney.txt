@@ -1,0 +1,11 @@
+- ต้องการจะรู้จำนวน active users ของเว็ป bitkub แต่ไม่สามารถ มีข้อมูลในส่วนนั้นได้ จึงใช้ข้อมูล Vol ขอการเทรด ในเหรียญ จากสมมุติฐานที่ว่า
+Volume จะสะท้อนผู้ใช้งานของ bitkub ได้
+- ปัญหาการดึง data จาก google trend
+- ปัญหาการดึงข้อมูลจาก exchange bitkub (ไม่มี historical price ให้ดึง) จึงต้องดึงจาก tradingview
+- ปัญหาการดึง tradingview data
+
+- ข้อมูล Google trend จำนวน 2 ปี มีข้อมูลที่เป็น 0 เยอะมาก ถึง 590 และมียอดการค้นหาเพียง 48 วัน
+
+# combine 2 sources
+- ใช้ volume จาก Binance เพื่อมาหา %chg ที่เป็นส่วนเกินมาจาก bitkub
+- 2 source merge แล้วพัง เพราะ format ของเวลาเหมือนไม่กัน
