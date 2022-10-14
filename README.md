@@ -415,4 +415,3 @@ Percent of days volume change at bitkub > volume change at binance (Search != 0)
 
 
 
-
