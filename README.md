@@ -410,6 +410,8 @@ Percent of days volume change at bitkub > volume change at binance (Search != 0)
 
 # Challenge ที่พบในการทำ Mini-Project นี้
 - การนำข้อมูลที่ไม่ใด้เหมาะสมกับคำถามที่สุดมาใช้ การใช้ Volume การซื้อขาย (แทนที่จะเป็น Daily Active Users โดยตรง) วิเคราะห์ร่วมกับ Google Trend สามารถทำได้อย่างยากลำบาก โดยในกรณีนี้ นำข้อมูลจาก Binance มาช่วย
+- การ Combine ข้อมูล ที่มี Datetime format ต่างกัน
+- การ Plot Graph ที่อาจจะยังไม่เหมาะสมที่สุด ทำให้ไม่ได้ข้อมูลเท่าที่ควร
 
 
 
