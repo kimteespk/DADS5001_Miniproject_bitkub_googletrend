@@ -18,9 +18,7 @@ df_binance_eth
 #df_binance_kub
 df_binance_eth.to_csv('./eth_ohclv_binance.csv')
 df_binance_btc.to_csv('./btc_ohclv_binance.csv')
-# df_bitkub_kub.to_csv('./kub_ohclv_bitkub.csv')
 
-#type(df_bitkub_btc)
 # Return ohlcv in pandas dataframe class
 
 
