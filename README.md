@@ -343,17 +343,18 @@ search_percent = (df_mean_searched['binance_avg_1d_chg'] < df_mean_searched['bit
  - Plot เทียบระหว่าง Google trend และ การเปลี่ยนแปลงของปริมาณการซื้อขาย เฉพาะวันที่ การเปลี่ยนแปลงใน Bitkub สูงกว่าใน Binance
  
 ```python
+# Plot ดูค่าเฉลี่ยของการเปลี่ยนแปลงปริมาณของทั้ง2เหรียญ 
 width = 0.3
+
 mpl.rcParams['figure.figsize'] = [10, 5]
 
 
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
 ax2 = ax1.twinx()
-ax2.set_ylim(0)
+ax2.set_ylim(0,1.2)
 
 df_mean_searched.googletrend.plot(kind= 'bar', ax= ax1, width= width, position=1)
-#df_mean_searched.bitkub_avg_1d_chg.plot(kind= 'bar', color= 'r', ax= ax2, width= width, position=0)
 df_mean_searched.bitkub_avg_1d_chg.loc[df_mean_searched['bitkub_avg_1d_chg'] > df_mean_searched['binance_avg_1d_chg']].plot(kind= 'bar', color= 'r', ax= ax2, width= width, position=0)
 
 ax1.set_title('Google trend search and Volume percent change (Filter: Bitkub volume change > Binance volume change)')
@@ -363,20 +364,30 @@ ax1.set_ylabel('Google Trend')
 ax2.set_ylabel('Volume percent change')
 ax1.set_xlabel('Days')
 
+ax1.legend(bbox_to_anchor= (0.9,0.9))
+ax2.legend(bbox_to_anchor= (0.9,1))
 plt.show()
 ```
-![image](https://user-images.githubusercontent.com/84601005/195850767-6fa509e4-a173-4278-904a-4195d69737dd.png)
+![image](https://user-images.githubusercontent.com/84601005/196147351-2ad59e90-8f15-42f2-b8fc-b0e1bb25bf48.png)
 
 
 ```python
 mpl.rcParams['figure.figsize'] = [5, 5]
-plt.scatter(df_mean_cut_outlier['bitkub_avg_1d_chg'] - df_mean_cut_outlier['binance_avg_1d_chg'], df_mean_cut_outlier['googletrend'], alpha= 0.8)
-#cb = plt.colorbar()
-plt.xlabel('Average change of volume at bitkub')
+plt.scatter((df_mean_cut_outlier['bitkub_avg_1d_chg'] - df_mean_cut_outlier['binance_avg_1d_chg']), df_mean_cut_outlier['googletrend'], alpha= 0.8, color='b')
+plt.xlabel('Average excess change of volume (binance - bitkub)')
 plt.ylabel('Googletrend')
+plt.axvline(0, color= 'r', ls= ':')
+
 plt.show()
 ```
-- จากรูปยังไม่ได้คำตอบที่แน่ชัด เพราะมีทั้งวันที่มีการค้นหามากและปริมาณการซื้อขายเพิ่มขึ้นมาก แต่ยังมีวันที่มีการค้นหามาก แต่ปริมาณการซื้อขายที่ Bitkub ไม่ได้เพิ่มขึ้นเมื่อเทียบกับ Binance
+![image](https://user-images.githubusercontent.com/84601005/196147752-4756ca18-bb6b-4b4d-97b2-ad2ece519f25.png)
+
+- จากรูปดูแทบไม่เห็นถึงความสัมพันธ์กันระหว่าง 2 ข้อมูลเลย เพราะมีทั้งวันที่มีการค้นหามากและปริมาณการซื้อขายเพิ่มขึ้นมาก แต่ยังมีวันที่มีการค้นหามาก แต่ส่วนต่างระหว่างการซื้อขายที่ Bitkub มากกว่าที่ Binance ไม่ได้เพิ่มมากขึ่้นเลย
+
+แต่สิ่งหนึ่งที่สังเกตเห็นได้คือ ข้อมูลในฝั่งที่การค้นหามากกว่า 0 นั้น ปริมาณข้อมูลที่ Bitkub เปลี่ยนแปลงเพิ่มขึ้นมากกว่า Binance นั้นมีมากกว่า
+
+ลอง plot ดูปริมาณข้อมูลว่า Bitkub เปลี่ยนแปลงมากกว่า Binance มีจำนวนเท่าไหร่
+
 
 - ดูสัดส่วนว่าในวันทั้งหมด, วันที่มีการค้นหา, วันที่ไม่มีการค้นหา มีอัตราส่วนเท่าไหร่ ที่ปริมาณการซื้อขายใน Bitkub เปลี่ยนแปลงเพิ่มขึ้นมากกว่า ปริมาณการซื้อขายใน Binance
 
@@ -385,12 +396,20 @@ print(f'Percent of days volume change at bitkub > volume change at binance :{tot
 print(f'Percent of days volume change at bitkub > volume change at binance (Search == 0) :{no_search_percent:.4f}')
 print(f'Percent of days volume change at bitkub > volume change at binance (Search != 0) :{search_percent:.4f}')
 
+x_lst = ['Whole data', 'No search days', 'Search > 0 days']
+y_bitkub_lst = [total_percent, no_search_percent, search_percent]
+y_binance_lst = [1-total_percent, 1-no_search_percent, 1-search_percent]
+print(y_bitkub_lst)
+print(y_binance_lst)
+
 mpl.rcParams['figure.figsize'] = [5, 5]
 plt.title('Percent volume change (bitkub > binance)')
-plt.bar('Whole data' ,total_percent)
-plt.bar('Search == 0',no_search_percent)
-plt.bar('Search != 0', search_percent)
-plt.ylabel('Ratio days bitkub %chg > binance %chg per total days')
+
+plt.bar(x_lst, y_bitkub_lst, label= '%Change Bitkub > Binance', width=0.3)#, position=0)
+plt.bar([0.3,1.3,2.3] , y_binance_lst, label= '%Change Binance > Bitkub', width=0.3, color='r')#, position= 1)
+
+plt.legend()
+
 plt.show()
 ```
 
@@ -399,7 +418,7 @@ Percent of days volume change at bitkub > volume change at binance :0.4875
 Percent of days volume change at bitkub > volume change at binance (Search == 0) :0.4357
 Percent of days volume change at bitkub > volume change at binance (Search != 0) :0.6875
 ```
-![image](https://user-images.githubusercontent.com/84601005/195851079-c8af79b9-f67b-492c-bf78-48bcda996c68.png)
+![image](https://user-images.githubusercontent.com/84601005/196147910-dcd92d27-bfa2-4060-b7b1-9a9f3ad3fc7b.png)
 
 - สรุปได้ว่าถึงแม้การเปลี่ยนแปลงของปริมาณการซื้อขาย จะไม่มีความผันแปรต่อยอดการค้นหาเลย "แต่เมื่อดูจากกราฟด้านบน ในวันที่มีการค้นหาใน Google การเปลี่ยนแปลงของปริมาณการซื้อขายเฉลี่ยของทั้ง 2 เหรียญในตลาด Bitkub สูงกว่า ตลาด Binance ถึง 68.75% ของวันทั้งหมดที่มีการค้นหา
 แต่ในวันที่ไม่มีการค้นหาใน Google นั้น สูงกว่าเพียงแค่ 43.57% ของวันทั้งหมดที่ไม่มีการค้นหา
